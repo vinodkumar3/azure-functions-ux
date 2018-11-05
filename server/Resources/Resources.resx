@@ -4637,4 +4637,10 @@ Set to "External URL" to use an API definition that is hosted elsewhere.</value>
   <data name="functionAppType" xml:space="preserve">
     <value>Function App Type</value>
   </data>
+  <data name="scaleOut" xml:space="preserve">
+    <value>Scale out</value>
+  </data>
+  <data name="scaleOutDescription" xml:space="preserve">
+    <value>This is a description for Scale out</value>
+  </data>
 </root>

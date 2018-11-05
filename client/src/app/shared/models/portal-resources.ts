@@ -1493,4 +1493,6 @@ export class PortalResources {
   public static scriptFunctionApp = 'scriptFunctionApp';
   public static precompiledDotNetApp = 'precompiledDotNetApp';
   public static functionAppType = 'functionAppType';
+  public static scaleOut = 'scaleOut';
+  public static scaleOutDescription = 'scaleOutDescription';
 }

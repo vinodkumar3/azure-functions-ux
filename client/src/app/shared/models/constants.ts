@@ -17,7 +17,7 @@ export class Constants {
 
   public static cdnHost = !!window.appsvc.cdn ? `${window.appsvc.cdn}/` : Constants.serviceHost;
   public static cdnNgMin = !!window.appsvc.cdn ? `${window.appsvc.cdn}/ng-min/` : '';
-  public static nodeVersion = '6.5.0'; 
+  public static nodeVersion = '6.5.0';
   public static nodeVersionV2 = '8.11.1';
   public static latest = 'latest';
   public static disabled = 'disabled';
@@ -288,6 +288,7 @@ export class ScenarioIds {
   public static readonly canScaleForSlots = 'canScaleForSlots';
   public static readonly byosSupported = 'byosSupported';
   public static readonly configureAADSupported = 'configureAADSupported';
+  public static readonly addScaleOut = 'addScaleOut';
 }
 
 export class NationalCloudArmUris {
@@ -580,6 +581,10 @@ export class FeatureFlags {
   public static UseNewSlotsBlade = 'UseNewSlotsBlade';
   public static ShowLegacySlotsBlade = 'ShowLegacySlotsBlade';
   public static oldDeploymentCenter = 'oldvsts';
+}
+
+export class SupportedFeatures {
+  public static ElasaticScaleOut = 'ElasaticScaleOut';
 }
 
 export enum FunctionAppVersion {
