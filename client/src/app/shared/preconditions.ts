@@ -40,7 +40,7 @@ export namespace Preconditions {
     // Can't reference the FunctionAppService here since that service creates these preconditions
     // and would create a stack overflow.
     protected getFunctionAppContext(resourceId: string) {
-      return this.cacheService.getArm(resourceId).map(r => ArmUtil.mapArmSiteToContext(r.json(), this.injector));
+      return this.cacheService.getArm(resourceId).map(r => ArmUtil.mapArmSiteToContext(r.json(), null, this.injector));
     }
   }
 

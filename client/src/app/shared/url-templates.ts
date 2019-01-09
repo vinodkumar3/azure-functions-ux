@@ -1,14 +1,14 @@
 import { ArmService } from 'app/shared/services/arm.service';
 import { ArmEmbeddedService } from './services/arm-embedded.service';
 import { ArmUtil } from 'app/shared/Utilities/arm-utils';
-import { ConfigService } from 'app/shared/services/config.service';
 import { PortalService } from './services/portal.service';
 import { Injector } from '@angular/core';
 import { ArmObj } from 'app/shared/models/arm/arm-obj';
 import { Site } from 'app/shared/models/arm/site';
+import { ApplicationSettings } from './models/arm/application-settings';
+import { ArmServiceHelper } from './services/arm.service-helper';
 
 export class UrlTemplates {
-  private configService: ConfigService;
   private portalService: PortalService;
   private armService: ArmService;
   private scmUrl: string;
@@ -16,9 +16,8 @@ export class UrlTemplates {
   private useNewUrls: boolean;
   private isEmbeddedFunctions: boolean;
 
-  constructor(private site: ArmObj<Site>, injector: Injector) {
+  constructor(private site: ArmObj<Site>, private appSettings: ArmObj<ApplicationSettings>, injector: Injector) {
     this.portalService = injector.get(PortalService);
-    this.configService = injector.get(ConfigService);
     this.armService = injector.get(ArmService);
 
     this.isEmbeddedFunctions = this.portalService.isEmbeddedFunctions;
@@ -29,21 +28,22 @@ export class UrlTemplates {
   }
 
   public getScmUrl() {
-    if (this.configService.isStandalone()) {
-      return this.getMainUrl();
-    } else if (this.isEmbeddedFunctions) {
-      return null;
-    } else {
-      const scmHostName = this.site.properties.hostNameSslStates && this.site.properties.hostNameSslStates.find(s => s.hostType === 1);
-      return scmHostName ? `https://${scmHostName.name}` : this.getMainUrl();
+    const scmHostName = this.site.properties.hostNameSslStates && this.site.properties.hostNameSslStates.find(s => s.hostType === 1);
+
+    if (!ArmUtil.isV1FunctionApp(this.appSettings)) {
+      return scmHostName ? `${ArmServiceHelper.armEndpoint}${this.site.id}/extensions` : this.getMainUrl();
     }
+
+    return scmHostName ? `https://${scmHostName.name}` : this.getMainUrl();
   }
 
   public getMainUrl() {
     if (this.site.properties.defaultHostName) {
-      return this.configService.isStandalone()
-        ? `https://${this.site.properties.defaultHostName}/functions/${this.site.name}`
-        : `https://${this.site.properties.defaultHostName}`;
+      if (!ArmUtil.isV1FunctionApp(this.appSettings)) {
+        return `${ArmServiceHelper.armEndpoint}${this.site.id}/hostruntime`;
+      }
+
+      return `https://${this.site.properties.defaultHostName}`;
     }
 
     return null;
@@ -66,7 +66,8 @@ export class UrlTemplates {
       return `${ArmEmbeddedService.url}${this.site.id}/functions?api-version=${this.armService.websiteApiVersion}`;
     }
 
-    return this.useNewUrls ? `${this.mainSiteUrl}/admin/functions` : `${this.scmUrl}/api/functions`;
+    const url = this.useNewUrls ? `${this.mainSiteUrl}/admin/functions` : `${this.scmUrl}/api/functions`;
+    return this._appendApiVersionForArm(url);
   }
 
   get proxiesJsonUrl(): string {
@@ -74,20 +75,6 @@ export class UrlTemplates {
   }
 
   getFunctionUrl(functionName: string, functionEntity?: string): string {
-    if (this.isEmbeddedFunctions) {
-      if (!!functionEntity) {
-        const smallerSiteId = this.site.id
-          .split('/')
-          .filter(part => !!part)
-          .slice(0, 6)
-          .join('/');
-        return `${ArmEmbeddedService.url}/${smallerSiteId}/entities/${functionEntity}/functions/${functionName}?api-version=${
-          this.armService.websiteApiVersion
-        }`;
-      }
-      return `${ArmEmbeddedService.url}${this.site.id}/functions/${functionName}?api-version=${this.armService.websiteApiVersion}`;
-    }
-
     return this.useNewUrls ? `${this.mainSiteUrl}/admin/functions/${functionName}` : `${this.scmUrl}/api/functions/${functionName}`;
   }
 
@@ -215,5 +202,13 @@ export class UrlTemplates {
 
   get updateHostStateUrl() {
     return `${this.mainSiteUrl}/admin/host/state`;
+  }
+
+  private _appendApiVersionForArm(url: string) {
+    if (url.startsWith(ArmServiceHelper.armEndpoint)) {
+      url = url + `?api-version=${this.armService.websiteApiVersion}`;
+    }
+
+    return url;
   }
 }

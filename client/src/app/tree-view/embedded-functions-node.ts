@@ -56,7 +56,7 @@ export class EmbeddedFunctionsNode extends TreeNode implements Collection, Mutab
           };
 
           fc.properties.entity = parts[8];
-          fc.properties.context = ArmUtil.mapArmSiteToContext(site, this.sideNav.injector);
+          fc.properties.context = ArmUtil.mapArmSiteToContext(site, null, this.sideNav.injector);
           return new FunctionNode(this.sideNav, fc.properties.context, fc.properties, this);
         });
 

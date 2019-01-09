@@ -106,6 +106,10 @@ export class FunctionAppService {
   }
 
   getClient(context: FunctionAppContext) {
+    if (context.useArmApis) {
+      return this.azure;
+    }
+
     return ArmUtil.isLinuxApp(context.site) ? this.runtime : this.azure;
   }
 
@@ -1211,7 +1215,21 @@ export class FunctionAppService {
   }
 
   getAppContext(resourceId: string): Observable<FunctionAppContext> {
-    return this._cacheService.getArm(resourceId).map(r => ArmUtil.mapArmSiteToContext(r.json(), this._injector));
+    // return this.azure.execute({ resourceId: context.site.id }, t =>
+    //   this._cacheService
+    //     .get(context.urlTemplates.extensionJsonUrl, true, this.headers(t))
+    //     .map(r => r.json() as ExtensionsJson)
+    //     .map(r => r.extensions)
+    // );
+
+    const siteRequest = this.azure.execute({ resourceId: resourceId }, t => this._cacheService.getArm(resourceId));
+    const appSettingRequest = this.azure.execute({ resourceId: resourceId }, t =>
+      this._cacheService.postArm(`${resourceId}/config/appsettings/list`)
+    );
+
+    return Observable.zip(siteRequest, appSettingRequest).map(r => {
+      return ArmUtil.mapArmSiteToContext(r[0].result.json(), r[1].isSuccessful ? r[1].result.json() : null, this._injector);
+    });
   }
 
   getAppContentAsZip(context: FunctionAppContext, includeCsProj: boolean, includeAppSettings: boolean): Result<any> {
