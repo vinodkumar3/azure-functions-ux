@@ -768,10 +768,10 @@ export class SiteManageComponent extends FeatureComponent<TreeViewInfo<SiteData>
           siteUri: site.id,
           planUri: site.properties.serverFarmId,
           options: {
-            hideIcon: true,
+            hideIcon: false,
           },
         },
-        openAsContextBlade: true,
+        openAsContextBlade: false,
       };
     }
 
