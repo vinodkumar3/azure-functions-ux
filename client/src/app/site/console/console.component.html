@@ -1,5 +1,8 @@
 <div class="browse-container">
-  <radio-selector [options]= "options" [defaultValue]= "currentOption" (value)= "optionsChange.next($event)"></radio-selector>
+  <!--<radio-selector *ngIf="allowToggle" [options]= "options" [defaultValue]= "currentOption" (value)= "optionsChange.next($event)"></radio-selector>-->
+  <div class="toggle-container">
+    <radio-selector [options]= "options" [defaultValue]= "currentOption" (value)= "optionsChange.next($event)"></radio-selector>
+  </div>
   &nbsp;<i *ngIf="!initialized" class = "fa fa-refresh fa-spin fa-fw"></i>
   <app-edit-mode-warning *ngIf="appModeVisible" [context]= "context"></app-edit-mode-warning>
   <app-cmd *ngIf="windows && toggleConsole" @fade></app-cmd>

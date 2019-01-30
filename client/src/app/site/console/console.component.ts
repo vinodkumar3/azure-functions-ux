@@ -28,6 +28,9 @@ import { FunctionAppService } from '../../shared/services/function-app.service';
   animations: [fade],
 })
 export class ConsoleComponent extends FeatureComponent<TreeViewInfo<SiteData>> {
+  @Input()
+  allowToggle = false;
+
   public toggleConsole = true;
   public consoleIcon = 'image/console.svg';
   public resourceId: string;
@@ -105,6 +108,7 @@ export class ConsoleComponent extends FeatureComponent<TreeViewInfo<SiteData>> {
           this._consoleService.sendPublishingCredentials(r.publishingCredentials);
           this.appName = r.publishingCredentials.name;
           this.context = r.context;
+          // this.appModeVisible = ArmUtil.isFunctionApp(r.site);
           this.appModeVisible = true;
           if (ArmUtil.isLinuxApp(r.site)) {
             // linux-app
