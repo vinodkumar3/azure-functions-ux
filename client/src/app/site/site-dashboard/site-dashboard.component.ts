@@ -352,7 +352,7 @@ export class SiteDashboardComponent extends NavigableComponent implements OnDest
         info.title = this._translateService.instant(PortalResources.feature_consoleName);
         info.iconUrl = 'image/console.svg';
         info.componentFactory = ConsoleComponent;
-        (info.componentInput as any).allowToggle = true;
+        (info.componentInput as any).isFunctionsPortal = true;
         info.closeable = true;
         break;
 

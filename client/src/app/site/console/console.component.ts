@@ -29,7 +29,7 @@ import { FunctionAppService } from '../../shared/services/function-app.service';
 })
 export class ConsoleComponent extends FeatureComponent<TreeViewInfo<SiteData>> {
   @Input()
-  allowToggle = false;
+  isFunctionsPortal = false;
 
   public toggleConsole = true;
   public consoleIcon = 'image/console.svg';
@@ -52,6 +52,7 @@ export class ConsoleComponent extends FeatureComponent<TreeViewInfo<SiteData>> {
   set viewInfoInput(viewInfo: TreeViewInfo<SiteData>) {
     this.setInput(viewInfo);
   }
+
   constructor(
     private _translateService: TranslateService,
     private _siteService: SiteService,
@@ -64,7 +65,6 @@ export class ConsoleComponent extends FeatureComponent<TreeViewInfo<SiteData>> {
     super('site-console', injector, SiteTabIds.console);
     this.featureName = 'console';
     this.isParentComponent = true;
-    this.initialized = true;
     this.optionsChange = new Subject<number>();
     this.optionsChange.subscribe(option => {
       this.currentOption = option;
@@ -86,7 +86,7 @@ export class ConsoleComponent extends FeatureComponent<TreeViewInfo<SiteData>> {
     return inputEvents
       .distinctUntilChanged()
       .switchMap(view => {
-        this.setBusy();
+        this.initialized = false;
         this.appModeVisible = false;
         this.resourceId = view.resourceId;
         this._consoleService.sendResourceId(this.resourceId);
@@ -108,14 +108,15 @@ export class ConsoleComponent extends FeatureComponent<TreeViewInfo<SiteData>> {
           this._consoleService.sendPublishingCredentials(r.publishingCredentials);
           this.appName = r.publishingCredentials.name;
           this.context = r.context;
-          // this.appModeVisible = ArmUtil.isFunctionApp(r.site);
-          this.appModeVisible = true;
           if (ArmUtil.isLinuxApp(r.site)) {
             // linux-app
             this._setLinuxDashboard();
           } else {
             this._setWindowsDashboard();
           }
+          this.initialized = true;
+          // this.appModeVisible = ArmUtil.isFunctionApp(r.site);
+          this.appModeVisible = true;
           this.clearBusyEarly();
           if (!this._siteDetailAvailable(r.site, r.publishingCredentials)) {
             this.showComponentError({
