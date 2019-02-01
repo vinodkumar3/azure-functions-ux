@@ -13,7 +13,7 @@ import { ArmObj } from '../../../../shared/models/arm/arm-obj';
 import { Site } from '../../../../shared/models/arm/site';
 import { PublishingCredentials } from '../../../../shared/models/publishing-credentials';
 import { Subscription } from 'rxjs/Subscription';
-import { ConsoleService } from './../services/console.service';
+import { ConsoleService, ConsoleTypes } from './../services/console.service';
 import { KeyCodes, ConsoleConstants } from '../../../../shared/models/constants';
 import { ErrorComponent } from './error.component';
 import { MessageComponent } from './message.component';
@@ -21,12 +21,14 @@ import { PromptComponent } from './prompt.component';
 import { Headers } from '@angular/http';
 
 export abstract class AbstractConsoleComponent implements OnInit, OnDestroy {
+  public consoleTypes = ConsoleTypes;
   public resourceId: string;
   public consoleType: number;
   public isFocused = false;
   public commandInParts = { leftCmd: '', middleCmd: ' ', rightCmd: '' }; // commands to left, right and on the pointer
   public dir: string;
   public initialized = false;
+  public headerMessage: string;
   protected enterPressed = false;
   protected site: ArmObj<Site>;
   protected publishingCredentials: ArmObj<PublishingCredentials>;

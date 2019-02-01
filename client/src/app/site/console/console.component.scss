@@ -6,14 +6,14 @@ h2 {
 
 div.browse-container {
   overflow: auto;
+  padding: 10px 25px 25px 25px;
 }
 
 #console-container {
   position: absolute;
-  padding-top: 2em;
-  height: calc(100% - 90px);
+  height: calc(100% - 15px);
+  height: calc(100% - 40px);
   width: calc(100% - 50px);
-  margin-bottom: 5px;
   background: red;
 }
 
@@ -26,9 +26,11 @@ div.loading {
 }
 
 div.console {
-  font-family: 'Courier New', 'Lucida Console', 'Times New', monospace;
+  font-family: Consolas, 'Courier New', monospace;
   height: 100%;
-  font-size: medium;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
   white-space: normal;
   width: 100%;
 }
@@ -61,7 +63,7 @@ div.console div.console-inner {
   overflow: auto;
   word-break: break-word;
   word-wrap: break-word;
-  padding: 0.8em;
+  padding: 0px 0px 0px 5px;
   width: 100%;
   height: 100%;
 }
@@ -70,8 +72,21 @@ div.console-message-header {
   color: $console-default-msg-color;
 }
 
-div.console-message-header span {
+div.console-message-header pre {
   white-space: pre-wrap;
+  margin: 0;
+  padding: 0;
+  tab-size: 4;
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 18px;
+  background: inherit;
+  color: #0074e0;
+  word-break: normal;
+  word-wrap: break-word;
+  font-style: normal;
+  font-weight: 700;
+  border: none;
 }
 
 div.console-message-value {
@@ -84,36 +99,40 @@ div.console-message-error {
 }
 
 div.console-prompt-box {
-  font-size: 0;
-}
+  font-size: 12px;
+  font-weight: 700;
+  font-family: Consolas, 'Courier New', monospace;
+  line-height: 18px;
 
-span.console-prompt-label {
-  font-size: medium;
+  span.console-prompt-label,
+  span.console-prompt {
+    white-space: pre-wrap;
+  }
+
+  span.console-cursor {
+    display: inline-block;
+    vertical-align: bottom;
+    height: 0px;
+    width: 7px;
+    margin-bottom: 4px;
+    border-bottom: 4px solid $console-text-color;
+    animation: blink 1s steps(3, start) infinite;
+    -webkit-animation: blink 1s steps(3, start) infinite;
+  }
+
+  span.bash-cursor {
+    height: 100%;
+    margin-bottom: 0px;
+    border: none;
+    color: $bash-cursor-text-color;
+    background-color: $bash-cursor-background-color;
+  }
 }
 
 textarea.console-typer {
   position: absolute;
   top: 0px;
   left: -9999px;
-}
-
-span.console-prompt {
-  font-size: medium;
-  white-space: pre-wrap;
-}
-
-span.console-cursor {
-  text-decoration: none;
-  border-bottom: 5px solid $console-text-color;
-  font-size: medium;
-  animation: blink 1s steps(3, start) infinite;
-  -webkit-animation: blink 1s steps(3, start) infinite;
-}
-
-span.bash-cursor {
-  border: none;
-  color: $bash-cursor-text-color;
-  background-color: $bash-cursor-background-color;
 }
 
 @-webkit-keyframes blink {
