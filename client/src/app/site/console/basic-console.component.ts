@@ -2,12 +2,11 @@ import { Injector, Input, Component, ViewChild } from '@angular/core';
 import { FeatureComponent } from '../../shared/components/feature-component';
 import { SiteData, TreeViewInfo } from '../../tree-view/models/tree-view-info';
 import { Subject } from 'rxjs/Subject';
-import { SelectOption } from '../../shared/models/select-option';
 import { LogCategories, SiteTabIds } from '../../shared/models/constants';
 import { SiteService } from '../../shared/services/site.service';
 import { LogService } from '../../shared/services/log.service';
 import { CacheService } from '../../shared/services/cache.service';
-import { ConsoleService, ConsoleTypes } from './shared/services/console.service';
+import { ConsoleService } from './shared/services/console.service';
 import { Observable } from 'rxjs/Observable';
 import { ArmUtil } from '../../shared/Utilities/arm-utils';
 import { TranslateService } from '@ngx-translate/core';
@@ -20,35 +19,31 @@ import { errorIds } from '../../shared/models/error-ids';
 import { FunctionAppContext } from '../../shared/function-app-context';
 import { ArmSiteDescriptor } from '../../shared/resourceDescriptors';
 import { FunctionAppService } from '../../shared/services/function-app.service';
+import { EditModeWarningComponent } from '../../edit-mode-warning/edit-mode-warning.component';
 
 @Component({
-  selector: 'app-console',
-  templateUrl: './console.component.html',
-  styleUrls: ['./console.component.scss'],
+  selector: 'app-basic-console',
+  templateUrl: './basic-console.component.html',
+  styleUrls: ['./basic-console.component.scss'],
   animations: [fade],
 })
-export class ConsoleComponent extends FeatureComponent<TreeViewInfo<SiteData>> {
-  public toggleConsole = true;
+export class BasicConsoleComponent extends FeatureComponent<TreeViewInfo<SiteData>> {
   public consoleIcon = 'image/console.svg';
   public resourceId: string;
-  public initialized = false;
-  public windows = true;
+  public os: 'windows' | 'linux' = null;
   public appName: string;
   public viewInfoStream = new Subject<TreeViewInfo<SiteData>>();
-  public currentOption: number;
-  public options: SelectOption<number>[];
-  public optionsChange: Subject<number>;
-  public sshUrl = '';
   public appModeVisible = false;
   public context: FunctionAppContext;
 
-  @ViewChild('ssh')
-  private _sshComponent;
+  @ViewChild('app-edit-mode-warning')
+  editModeWarning: EditModeWarningComponent;
 
   @Input()
   set viewInfoInput(viewInfo: TreeViewInfo<SiteData>) {
     this.setInput(viewInfo);
   }
+
   constructor(
     private _translateService: TranslateService,
     private _siteService: SiteService,
@@ -58,24 +53,9 @@ export class ConsoleComponent extends FeatureComponent<TreeViewInfo<SiteData>> {
     private _functionAppService: FunctionAppService,
     injector: Injector
   ) {
-    super('site-console', injector, SiteTabIds.console);
-    this.featureName = 'console';
+    super('site-basic-console', injector, SiteTabIds.console);
+    this.featureName = 'basic-console';
     this.isParentComponent = true;
-    this.initialized = true;
-    this.optionsChange = new Subject<number>();
-    this.optionsChange.subscribe(option => {
-      this.currentOption = option;
-      this._onOptionChange();
-    });
-    this.currentOption = ConsoleTypes.CMD;
-  }
-
-  reconnectSSH() {
-    this._sshComponent.reconnect();
-  }
-
-  openNewSSHWindow() {
-    window.open(this._sshComponent.getKuduUri(), '_blank');
   }
 
   protected setup(inputEvents: Observable<TreeViewInfo<SiteData>>) {
@@ -83,7 +63,7 @@ export class ConsoleComponent extends FeatureComponent<TreeViewInfo<SiteData>> {
     return inputEvents
       .distinctUntilChanged()
       .switchMap(view => {
-        this.setBusy();
+        this.os = null;
         this.appModeVisible = false;
         this.resourceId = view.resourceId;
         this._consoleService.sendResourceId(this.resourceId);
@@ -105,13 +85,8 @@ export class ConsoleComponent extends FeatureComponent<TreeViewInfo<SiteData>> {
           this._consoleService.sendPublishingCredentials(r.publishingCredentials);
           this.appName = r.publishingCredentials.name;
           this.context = r.context;
-          this.appModeVisible = true;
-          if (ArmUtil.isLinuxApp(r.site)) {
-            // linux-app
-            this._setLinuxDashboard();
-          } else {
-            this._setWindowsDashboard();
-          }
+          this.os = ArmUtil.isLinuxApp(r.site) ? 'linux' : 'windows';
+          this.appModeVisible = ArmUtil.isFunctionApp(r.site);
           this.clearBusyEarly();
           if (!this._siteDetailAvailable(r.site, r.publishingCredentials)) {
             this.showComponentError({
@@ -141,43 +116,5 @@ export class ConsoleComponent extends FeatureComponent<TreeViewInfo<SiteData>> {
       return false;
     }
     return true;
-  }
-
-  private _setWindowsDashboard() {
-    this.windows = true;
-    this.options = [
-      {
-        displayLabel: this._translateService.instant(PortalResources.feature_cmdConsoleName),
-        value: ConsoleTypes.CMD,
-      },
-      {
-        displayLabel: this._translateService.instant(PortalResources.feature_powerShellConsoleName),
-        value: ConsoleTypes.PS,
-      },
-    ];
-    this.currentOption = ConsoleTypes.CMD;
-  }
-
-  private _setLinuxDashboard() {
-    this.windows = false;
-    this.options = [
-      {
-        displayLabel: this._translateService.instant(PortalResources.feature_bashConsoleName),
-        value: ConsoleTypes.BASH,
-      },
-      {
-        displayLabel: this._translateService.instant(PortalResources.feature_sshConsoleName),
-        value: ConsoleTypes.SSH,
-      },
-    ];
-    this.currentOption = ConsoleTypes.BASH;
-  }
-
-  private _onOptionChange() {
-    if (this.currentOption === ConsoleTypes.CMD || this.currentOption === ConsoleTypes.BASH) {
-      this.toggleConsole = true;
-      return;
-    }
-    this.toggleConsole = false;
   }
 }

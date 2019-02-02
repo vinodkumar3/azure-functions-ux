@@ -3,7 +3,7 @@
       <div id="console-body" class="console-inner">
         <textarea #consoleText class="console-typer" (copy)="handleCopy($event)" 
         (onfocus)="focusConsoleOnTabPress()" (paste)="handlePaste($event)" (keydown)="keyEvent($event)" ng-blur="unFocusConsole()"></textarea>
-        <div class="console-message-header" aria-live="polite">
+        <div *ngIf="!cleared" class="console-message-header" aria-live="polite">
           <pre>              _    _____   _ ___ ___ 
              /_\  |_  / | | | _ \ __| 
        _ ___/ _ \__/ /| |_| |   / _|___ _ _ 

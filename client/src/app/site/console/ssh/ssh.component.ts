@@ -10,7 +10,7 @@ import { SiteTabIds, HostTypes } from '../../../shared/models/constants';
 @Component({
   selector: 'app-ssh',
   templateUrl: './ssh.component.html',
-  styleUrls: ['./../console.component.scss', './ssh.component.scss'],
+  styleUrls: ['./../console.component.scss', './../basic-console.component.scss', './ssh.component.scss'],
 })
 export class SSHComponent implements OnInit, OnDestroy {
   public sshUrl = '';

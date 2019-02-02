@@ -5,9 +5,8 @@ import { ConsoleConstants, HttpMethods, HostTypes } from '../../../shared/models
 
 @Component({
   selector: 'app-bash',
-  // templateUrl: './bash.component.html',
   templateUrl: '././../shared/templates/abstract.console.component.html',
-  styleUrls: ['./../console.component.scss'],
+  styleUrls: ['./../console.component.scss', './../basic-console.component.scss'],
 })
 export class BashComponent extends AbstractConsoleComponent {
   private _defaultDirectory = '/home';
@@ -98,10 +97,10 @@ export class BashComponent extends AbstractConsoleComponent {
       data => {
         const { Output, ExitCode, Error } = data.json();
         if (Error !== '') {
-          this.addErrorComponent(`${Error}${ConsoleConstants.linuxNewLine}`);
+          this.addErrorComponent(`${Error.trimEnd()}${ConsoleConstants.linuxNewLine}`);
         } else if (ExitCode === ConsoleConstants.successExitcode && Output !== '') {
           this._updateDirectoryAfterCommand(Output.trim());
-          const msg = Output.split(this.getMessageDelimeter())[0];
+          const msg = Output.split(this.getMessageDelimeter())[0].trimEnd();
           this.addMessageComponent(`${msg}${ConsoleConstants.linuxNewLine}`);
         }
         this.addPromptComponent();
@@ -131,14 +130,20 @@ export class BashComponent extends AbstractConsoleComponent {
    * perform action on key pressed.
    */
   protected performAction(): boolean {
+    if (!this.command || !this.command.trim()) {
+      this.addMessageComponent();
+      return false;
+    }
     if (this.command.toLowerCase() === ConsoleConstants.linuxClear) {
       // bash uses clear to empty the console
       this.removeMsgComponents();
+      this.cleared = true;
       return false;
     }
     if (this.command.toLowerCase() === ConsoleConstants.exit) {
       this.removeMsgComponents();
       this.dir = this._defaultDirectory;
+      this.cleared = true;
       return false;
     }
     return true;
