@@ -115,8 +115,7 @@ export class ConsoleComponent extends FeatureComponent<TreeViewInfo<SiteData>> {
             this._setWindowsDashboard();
           }
           this.initialized = true;
-          // this.appModeVisible = ArmUtil.isFunctionApp(r.site);
-          this.appModeVisible = true;
+          this.appModeVisible = ArmUtil.isFunctionApp(r.site);
           this.clearBusyEarly();
           if (!this._siteDetailAvailable(r.site, r.publishingCredentials)) {
             this.showComponentError({

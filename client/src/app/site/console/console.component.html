@@ -1,9 +1,9 @@
 <div class="browse-container" [class.functions-portal]="isFunctionsPortal">
-  <!---->
+  <!--
   <div *ngIf="!initialized" class="loading">
     {{ 'loading' | translate }}&nbsp;<i class="fa fa-refresh fa-spin fa-fw"></i>
   </div>
-  <!---->
+  -->
   <ng-container *ngIf="!!initialized || !initialized">
     <radio-selector *ngIf="isFunctionsPortal"
       [options]="options"

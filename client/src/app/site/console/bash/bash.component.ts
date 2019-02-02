@@ -98,10 +98,10 @@ export class BashComponent extends AbstractConsoleComponent {
       data => {
         const { Output, ExitCode, Error } = data.json();
         if (Error !== '') {
-          this.addErrorComponent(`${Error.trim()}${ConsoleConstants.linuxNewLine}`);
+          this.addErrorComponent(`${Error}${ConsoleConstants.linuxNewLine}`);
         } else if (ExitCode === ConsoleConstants.successExitcode && Output !== '') {
           this._updateDirectoryAfterCommand(Output.trim());
-          const msg = Output.split(this.getMessageDelimeter())[0].trim();
+          const msg = Output.split(this.getMessageDelimeter())[0];
           this.addMessageComponent(`${msg}${ConsoleConstants.linuxNewLine}`);
         }
         this.addPromptComponent();

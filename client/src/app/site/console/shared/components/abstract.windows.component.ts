@@ -107,10 +107,10 @@ export abstract class AbstractWindowsComponent extends AbstractConsoleComponent 
       data => {
         const { Output, ExitCode, Error } = data.json();
         if (Error !== '') {
-          this.addErrorComponent(`${Error.trim()}${ConsoleConstants.windowsNewLine.repeat(2)}`);
+          this.addErrorComponent(`${Error}${ConsoleConstants.windowsNewLine.repeat(2)}`);
         } else if (ExitCode === ConsoleConstants.successExitcode && Output !== '') {
           this._updateDirectoryAfterCommand(Output.trim());
-          const msg = Output.split(this.getMessageDelimeter())[0].trim();
+          const msg = Output.split(this.getMessageDelimeter())[0];
           this.addMessageComponent(`${msg}${ConsoleConstants.windowsNewLine.repeat(2)}`);
         }
         this.addPromptComponent();
