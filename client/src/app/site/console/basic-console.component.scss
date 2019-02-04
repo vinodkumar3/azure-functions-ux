@@ -96,7 +96,7 @@ span.bash-cursor {
 }
 
 :host-context([console-type='basic']),
-[console='basic'] {
+[console-type='basic'] {
   div.console-wrapper {
     position: absolute;
     height: calc(100% - 35px);
