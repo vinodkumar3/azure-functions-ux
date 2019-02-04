@@ -14,19 +14,6 @@
 {{ 'feature_consoleMsg' | translate}}
           </span>
         </div>
-        <!--
-        <div class="console-prompt-box" id="prompt">
-          <ng-container *ngIf="consoleType===consoleTypes.BASH">
-              <span class="console-prompt-label">{{appName}}:~$&nbsp;</span><span class="console-prompt" aria-live="polite"><span class="console-command">{{commandInParts.leftCmd}}</span><span class="console-cursor bash-cursor" *ngIf="isFocused">{{commandInParts.middleCmd}}</span>{{commandInParts.rightCmd}}</span>
-          </ng-container>
-          <ng-container *ngIf="consoleType===consoleTypes.CMD">
-              <span class="console-prompt-label">{{dir}}></span><span class="console-prompt" aria-live="polite"><span class="console-command">{{commandInParts.leftCmd}}</span><span class="console-cursor" *ngIf="isFocused">{{commandInParts.middleCmd}}</span>{{commandInParts.rightCmd}}</span>
-          </ng-container>
-          <ng-container *ngIf="consoleType===consoleTypes.PS">
-              <span class="console-prompt-label">PS&nbsp;{{dir}}></span><span class="console-prompt" aria-live="polite"><span class="console-command">{{commandInParts.leftCmd}}</span><span class="console-cursor" *ngIf="isFocused">{{commandInParts.middleCmd}}</span>{{commandInParts.rightCmd}}</span>
-          </ng-container>
-        </div>
-        -->
         <ng-container #prompt></ng-container>
       </div>
     </div>

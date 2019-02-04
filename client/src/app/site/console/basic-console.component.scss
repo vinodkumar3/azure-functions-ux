@@ -4,6 +4,10 @@ h2 {
   display: inline;
 }
 
+div.browse-container {
+  overflow: auto;
+}
+
 .action {
   margin-left: 10px;
 }
@@ -55,6 +59,10 @@ div.console div.console-inner {
   height: 100%;
 }
 
+div.console-message-header span {
+  white-space: pre-wrap;
+}
+
 div.console-message-value,
 div.console-message-error {
   white-space: pre-wrap;
@@ -71,13 +79,13 @@ span.console-prompt-label {
 
 span.console-cursor {
   text-decoration: none;
-  border-bottom: 4px solid $console-text-color;
+  box-shadow: 0px -4px $console-text-color inset;
   animation: blink 1s steps(3, start) infinite;
   -webkit-animation: blink 1s steps(3, start) infinite;
 }
 
 span.bash-cursor {
-  border: none;
+  box-shadow: none;
   color: $bash-cursor-text-color;
   background-color: $bash-cursor-background-color;
 }
@@ -85,7 +93,6 @@ span.bash-cursor {
 :host-context([console-type='basic']),
 [console='basic'] {
   div.browse-container {
-    overflow: auto;
     padding: 10px 25px 25px 25px;
   }
 
@@ -113,32 +120,8 @@ span.bash-cursor {
     padding: 0px 0px 0px 5px;
   }
 
-  div.console-message-header {
-    span,
-    pre {
-      tab-size: 4;
-      background: inherit;
-      color: #0074e0;
-      font-style: normal;
-      font-weight: 700;
-      border: none;
-
-      white-space: pre-wrap;
-      display: block;
-      padding: 5px;
-      padding: 0;
-      margin: 0 0 10px;
-      margin: 0;
-      font-size: 12px;
-      line-height: 1.42857143;
-      line-height: 18px;
-      word-break: break-all;
-      word-break: normal;
-      word-wrap: break-word;
-      font-family: Consolas, 'Lucida Console', 'Courier New', monospace;
-      font-family: Consolas, 'Courier New', monospace;
-      border-radius: 0;
-    }
+  div.console-message-header span {
+    color: #0074e0;
   }
 
   div.console-message-value.result-string,
@@ -162,18 +145,5 @@ span.bash-cursor {
     font-weight: 700;
     font-family: Consolas, 'Courier New', monospace;
     line-height: 18px;
-  }
-
-  span.console-cursor {
-    display: inline-block;
-    vertical-align: bottom;
-    height: 0px;
-    width: 1em;
-    margin-bottom: 4px;
-  }
-
-  span.bash-cursor {
-    height: 100%;
-    margin-bottom: 0px;
   }
 }
