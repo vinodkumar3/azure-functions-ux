@@ -72,6 +72,7 @@ export abstract class AbstractConsoleComponent implements OnInit, OnDestroy {
     });
     this.initializeConsole();
     this.initialized = true;
+    this.addPromptComponent();
     this.focusConsole();
   }
 

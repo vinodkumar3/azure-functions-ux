@@ -36,7 +36,7 @@ export class BasicConsoleComponent extends FeatureComponent<TreeViewInfo<SiteDat
   public appModeVisible = false;
   public context: FunctionAppContext;
 
-  @ViewChild('app-edit-mode-warning')
+  @ViewChild(EditModeWarningComponent)
   editModeWarning: EditModeWarningComponent;
 
   @Input()
