@@ -40,18 +40,6 @@ textarea.console-typer {
   z-index: -1;
 }
 
-@-webkit-keyframes blink {
-  to {
-    visibility: hidden;
-  }
-}
-
-@keyframes blink {
-  to {
-    visibility: hidden;
-  }
-}
-
 div.console div.console-inner {
   background-color: $console-background-color; // #215b7e;
   color: $console-text-color;
@@ -64,22 +52,21 @@ div.console div.console-inner {
   height: 100%;
 }
 
-div.console-message-header span {
+div.console-message-header span,
+div.console-message-command,
+div.console-message-value,
+div.console-message-error,
+span.console-prompt-label,
+span.console-prompt {
   white-space: pre-wrap;
 }
 
-div.console-message-value,
-div.console-message-error {
-  white-space: pre-wrap;
+div.console-message-header span {
+  color: $console-header-msg-color;
 }
 
 div.console-message-error {
   color: $console-error-color;
-}
-
-span.console-prompt,
-span.console-prompt-label {
-  white-space: pre-wrap;
 }
 
 span.console-cursor {
@@ -95,16 +82,29 @@ span.bash-cursor {
   background-color: $bash-cursor-background-color;
 }
 
+@-webkit-keyframes blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+@keyframes blink {
+  to {
+    visibility: hidden;
+  }
+}
+
 :host-context([console-type='full']),
 [console-type='full'] {
   div.console-wrapper {
     position: absolute;
-    padding-top: 2em;
+    margin-top: 2em;
     height: calc(100% - 90px);
     width: calc(100% - 50px);
     margin-bottom: 5px;
 
     &.shortened {
+      margin-top: 0px;
       height: calc(100% - 140px);
     }
   }
@@ -121,20 +121,56 @@ span.bash-cursor {
     padding: 0.8em;
   }
 
-  div.console-message-header span {
-    color: $console-default-msg-color;
-  }
-
   div.console-prompt-box {
     font-size: 0;
   }
 
+  span.console-prompt-label,
   span.console-prompt,
-  span.console-prompt-label {
-    font-size: medium;
-  }
-
   span.console-cursor {
     font-size: medium;
+  }
+}
+
+:host-context([console-type='basic']),
+[console-type='basic'] {
+  div.console-wrapper {
+    position: absolute;
+    height: calc(100% - 35px);
+    width: calc(100% - 50px);
+
+    &.shortened {
+      height: calc(100% - 85px);
+    }
+  }
+
+  div.console {
+    font-family: Consolas, 'Courier New', monospace;
+    height: 100%;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 18px;
+    white-space: normal;
+    width: 100%;
+  }
+
+  div.console div.console-inner {
+    padding: 0px 0px 0px 5px;
+  }
+
+  div.console-message-value,
+  div.console-message-error {
+    display: inline;
+    font-family: 'Segoe UI', 'Segoe UI Bold', 'Segoe WP Bold', 'Segoe WP', Tahoma, Arial, sans-serif;
+
+    &::before,
+    &::after {
+      content: '';
+      display: block;
+    }
+  }
+
+  div.console-message-value {
+    color: $console-success-color;
   }
 }

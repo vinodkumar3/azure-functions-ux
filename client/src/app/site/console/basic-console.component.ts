@@ -24,7 +24,7 @@ import { EditModeWarningComponent } from '../../edit-mode-warning/edit-mode-warn
 @Component({
   selector: 'app-basic-console',
   templateUrl: './basic-console.component.html',
-  styleUrls: ['./basic-console.component.scss'],
+  styleUrls: ['./console.component.scss'],
   animations: [fade],
 })
 export class BasicConsoleComponent extends FeatureComponent<TreeViewInfo<SiteData>> {

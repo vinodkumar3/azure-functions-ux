@@ -6,7 +6,7 @@ import { ConsoleConstants, HttpMethods, HostTypes } from '../../../shared/models
 @Component({
   selector: 'app-bash',
   templateUrl: '././../shared/templates/abstract.console.component.html',
-  styleUrls: ['./../console.component.scss', './../basic-console.component.scss'],
+  styleUrls: ['./../console.component.scss'],
 })
 export class BashComponent extends AbstractConsoleComponent {
   private _defaultDirectory = '/home';
