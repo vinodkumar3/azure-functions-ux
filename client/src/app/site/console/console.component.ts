@@ -20,6 +20,7 @@ import { errorIds } from '../../shared/models/error-ids';
 import { FunctionAppContext } from '../../shared/function-app-context';
 import { ArmSiteDescriptor } from '../../shared/resourceDescriptors';
 import { FunctionAppService } from '../../shared/services/function-app.service';
+import { EditModeWarningComponent } from '../../edit-mode-warning/edit-mode-warning.component';
 
 @Component({
   selector: 'app-console',
@@ -44,6 +45,9 @@ export class ConsoleComponent extends FeatureComponent<TreeViewInfo<SiteData>> {
 
   @ViewChild('ssh')
   private _sshComponent;
+
+  @ViewChild(EditModeWarningComponent)
+  editModeWarning: EditModeWarningComponent;
 
   @Input()
   set viewInfoInput(viewInfo: TreeViewInfo<SiteData>) {

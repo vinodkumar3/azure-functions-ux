@@ -1,7 +1,9 @@
 <div console-type="basic">
-  <div class="browse-container" [class.shortened]="!!editModeWarning && !editModeWarning.isEmpty">
+  <div class="browse-container">
     <app-edit-mode-warning *ngIf="appModeVisible" [context]="context"></app-edit-mode-warning>
-    <app-cmd *ngIf="os==='windows'" @fade></app-cmd>
-    <app-bash *ngIf="os==='linux'" [appName]="appName" @fade></app-bash>
+    <div class="console-wrapper" [class.shortened]="!!editModeWarning && !editModeWarning.isEmpty">
+      <app-cmd *ngIf="os==='windows'" @fade></app-cmd>
+      <app-bash *ngIf="os==='linux'" [appName]="appName" @fade></app-bash>
+    </div>
   </div>
 </div>

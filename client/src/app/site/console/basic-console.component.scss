@@ -8,6 +8,11 @@ div.browse-container {
   overflow: auto;
 }
 
+#console-container {
+  height: 100%;
+  width: 100%;
+}
+
 .action {
   margin-left: 10px;
 }
@@ -30,8 +35,8 @@ div.browse-container {
 
 textarea.console-typer {
   position: absolute;
-  top: 0px;
-  left: 0px;
+  height: 0px;
+  width: 0px;
   z-index: -1;
 }
 
@@ -92,18 +97,14 @@ span.bash-cursor {
 
 :host-context([console-type='basic']),
 [console='basic'] {
-  div.browse-container {
-    padding: 10px 25px 25px 25px;
-  }
-
-  #console-container {
+  div.console-wrapper {
     position: absolute;
     height: calc(100% - 35px);
     width: calc(100% - 50px);
-  }
 
-  div.browse-container.shortened /deep/ #console-container {
-    height: calc(100% - 85px);
+    &.shortened {
+      height: calc(100% - 85px);
+    }
   }
 
   div.console {
