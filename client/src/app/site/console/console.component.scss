@@ -94,18 +94,25 @@ span.bash-cursor {
   }
 }
 
-:host-context([console-type='full']),
-[console-type='full'] {
+:host-context([console-type='tab']),
+[console-type='tab'] {
+  div.top-wrapper {
+    margin-bottom: 20px;
+  }
+
   div.console-wrapper {
     position: absolute;
-    margin-top: 2em;
     height: calc(100% - 90px);
     width: calc(100% - 50px);
     margin-bottom: 5px;
 
-    &.shortened {
-      margin-top: 0px;
+    &.warning-adjustment {
       height: calc(100% - 140px);
+
+      &.ssh-adjustment {
+        height: calc(100% - 160px);
+        margin-top: 20px;
+      }
     }
   }
 
@@ -132,15 +139,20 @@ span.bash-cursor {
   }
 }
 
-:host-context([console-type='basic']),
-[console-type='basic'] {
+:host-context([console-type='blade']),
+[console-type='blade'] {
   div.console-wrapper {
     position: absolute;
     height: calc(100% - 35px);
     width: calc(100% - 50px);
 
-    &.shortened {
-      height: calc(100% - 85px);
+    &.warning-adjustment {
+      height: calc(100% - 120px);
+
+      &.ssh-adjustment {
+        height: calc(100% - 140px);
+        margin-top: 20px;
+      }
     }
   }
 

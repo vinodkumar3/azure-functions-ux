@@ -1,26 +1,30 @@
-<div console-type="full">
+<div console-type="tab">
   <div class="browse-container">
-    <radio-selector [options]= "options" [defaultValue]= "currentOption" (value)= "optionsChange.next($event)"></radio-selector>
-    &nbsp;<i *ngIf="!initialized" class = "fa fa-refresh fa-spin fa-fw"></i>
-    <app-edit-mode-warning *ngIf="appModeVisible" [context]= "context"></app-edit-mode-warning>
-    <div class="console-wrapper" [class.shortened]="!!editModeWarning && !editModeWarning.isEmpty">
-      <app-cmd *ngIf="windows && toggleConsole" @fade></app-cmd>
-      <app-powershell *ngIf="windows && !toggleConsole" @fade></app-powershell>
-      <app-bash *ngIf="!windows && toggleConsole" [appName]= "appName" @fade></app-bash>
-      <app-ssh #ssh *ngIf="!windows && !toggleConsole"></app-ssh>
-    </div>
-    <div class="log-toolbar">
-      <span class="log-empty-space"></span>
-      <span class="link action" *ngIf="!windows && !toggleConsole" (click)="reconnectSSH()"
+    <div class="top-wrapper">
+      <radio-selector [options]= "options" [defaultValue]= "currentOption" (value)= "optionsChange.next($event)"></radio-selector>
+      &nbsp;<i *ngIf="!initialized" class = "fa fa-refresh fa-spin fa-fw"></i>
+      <app-edit-mode-warning *ngIf="appModeVisible" [context]= "context"></app-edit-mode-warning>
+      <div  *ngIf="!windows && !toggleConsole" class="log-toolbar" @fade>
+        <span class="log-empty-space"></span>
+        <span class="link action" *ngIf="!windows && !toggleConsole" (click)="reconnectSSH()"
           tabindex="0" role="button" attr.aria-label="{{ 'ssh_reconnect' | translate }}">
           <i class="fa fa-plug"></i>
           {{ 'ssh_reconnect' | translate }}
-      </span>
-      <span class="link action" *ngIf="!windows && !toggleConsole" (click)="openNewSSHWindow()"
+        </span>
+        <span class="link action" *ngIf="!windows && !toggleConsole" (click)="openNewSSHWindow()"
           tabindex="0" role="button" attr.aria-label="{{ 'ssh_newWindow' | translate }}">
           <i class="fa fa-external-link"></i>
           {{ 'ssh_newWindow' | translate }}
-      </span>
+        </span>
+      </div>
+    </div>
+    <div class="console-wrapper"
+      [class.warning-adjustment]="!!editModeWarning && !editModeWarning.isEmpty"
+      [class.ssh-adjustment]="!windows && !toggleConsole">
+      <app-cmd *ngIf="windows && toggleConsole" @fade></app-cmd>
+      <app-powershell *ngIf="windows && !toggleConsole" @fade></app-powershell>
+      <app-bash *ngIf="!windows && toggleConsole" [appName]= "appName" @fade></app-bash>
+      <app-ssh *ngIf="!windows && !toggleConsole" #ssh @fade></app-ssh>
     </div>
   </div>
 </div>
