@@ -103,7 +103,7 @@ span.bash-cursor {
 
   $heightAdjustment: 77;
   $heightAdjustmentWarning: $heightAdjustment + 85;
-  $heightAdjustmentSsh: $heightAdjustmentWarning + 20;
+  $heightAdjustmentWarningSsh: $heightAdjustmentWarning + 20;
 
   div.console-wrapper {
     position: absolute;
@@ -114,7 +114,7 @@ span.bash-cursor {
       height: calc(100% - #{$heightAdjustmentWarning}px);
 
       &.ssh-adjustment {
-        height: calc(100% - #{$heightAdjustmentSsh}px);
+        height: calc(100% - #{$heightAdjustmentWarningSsh}px);
         margin-top: 20px;
       }
     }
@@ -146,20 +146,25 @@ span.bash-cursor {
 :host-context([console-type='blade']),
 [console-type='blade'] {
   $heightAdjustment: 30;
+  $heightAdjustmentSsh: $heightAdjustment + 20;
   $heightAdjustmentWarning: $heightAdjustment + 85;
-  $heightAdjustmentSsh: $heightAdjustmentWarning + 20;
+  $heightAdjustmentWarningSsh: $heightAdjustmentWarning + 20;
 
   div.console-wrapper {
     position: absolute;
     height: calc(100% - #{$heightAdjustment}px);
     width: calc(100% - 50px);
 
+    &.ssh-adjustment {
+      height: calc(100% - #{$heightAdjustmentSsh}px);
+      margin-top: 20px;
+    }
+
     &.warning-adjustment {
       height: calc(100% - #{$heightAdjustmentWarning}px);
 
       &.ssh-adjustment {
-        height: calc(100% - #{$heightAdjustmentSsh}px);
-        margin-top: 20px;
+        height: calc(100% - #{$heightAdjustmentWarningSsh}px);
       }
     }
   }

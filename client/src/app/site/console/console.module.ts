@@ -12,7 +12,6 @@ import { PowershellComponent } from './powershell/powershell.component';
 import { BashComponent } from './bash/bash.component';
 import { SSHComponent } from './ssh/ssh.component';
 import { ConsoleComponent } from './console.component';
-import { BasicConsoleComponent } from './basic-console.component';
 import { SanitizeURL } from './shared/directives/sanitizeURL.pipe';
 import { SharedFunctionsModule } from '../../shared/shared-functions.module';
 import { ConsoleShellComponent } from '../../ibiza-feature/console-shell/console-shell.component';
@@ -20,7 +19,6 @@ import { ConsoleShellComponent } from '../../ibiza-feature/console-shell/console
 @NgModule({
   entryComponents: [
     ConsoleComponent,
-    BasicConsoleComponent,
     CmdComponent,
     PowershellComponent,
     BashComponent,
@@ -33,7 +31,6 @@ import { ConsoleShellComponent } from '../../ibiza-feature/console-shell/console
   declarations: [
     SanitizeURL,
     ConsoleComponent,
-    BasicConsoleComponent,
     CmdComponent,
     PowershellComponent,
     BashComponent,

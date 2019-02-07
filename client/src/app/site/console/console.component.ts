@@ -29,14 +29,16 @@ import { EditModeWarningComponent } from '../../edit-mode-warning/edit-mode-warn
   animations: [fade],
 })
 export class ConsoleComponent extends FeatureComponent<TreeViewInfo<SiteData>> {
+  @Input()
+  consoleType: 'tab' | 'blade' = 'tab';
   public toggleConsole = true;
   public consoleIcon = 'image/console.svg';
   public resourceId: string;
   public initialized = false;
-  public windows = true;
+  public os: 'windows' | 'linux' = null;
   public appName: string;
   public viewInfoStream = new Subject<TreeViewInfo<SiteData>>();
-  public currentOption: number;
+  public currentOption = -1;
   public options: SelectOption<number>[];
   public optionsChange: Subject<number>;
   public sshUrl = '';
@@ -53,6 +55,7 @@ export class ConsoleComponent extends FeatureComponent<TreeViewInfo<SiteData>> {
   set viewInfoInput(viewInfo: TreeViewInfo<SiteData>) {
     this.setInput(viewInfo);
   }
+
   constructor(
     private _translateService: TranslateService,
     private _siteService: SiteService,
@@ -71,7 +74,6 @@ export class ConsoleComponent extends FeatureComponent<TreeViewInfo<SiteData>> {
       this.currentOption = option;
       this._onOptionChange();
     });
-    this.currentOption = ConsoleTypes.CMD;
   }
 
   reconnectSSH() {
@@ -87,7 +89,7 @@ export class ConsoleComponent extends FeatureComponent<TreeViewInfo<SiteData>> {
     return inputEvents
       .distinctUntilChanged()
       .switchMap(view => {
-        this.setBusy();
+        this.os = null;
         this.appModeVisible = false;
         this.resourceId = view.resourceId;
         this._consoleService.sendResourceId(this.resourceId);
@@ -109,7 +111,8 @@ export class ConsoleComponent extends FeatureComponent<TreeViewInfo<SiteData>> {
           this._consoleService.sendPublishingCredentials(r.publishingCredentials);
           this.appName = r.publishingCredentials.name;
           this.context = r.context;
-          this.appModeVisible = true;
+          this.os = ArmUtil.isLinuxApp(r.site) ? 'linux' : 'windows';
+          this.appModeVisible = ArmUtil.isFunctionApp(r.site);
           if (ArmUtil.isLinuxApp(r.site)) {
             // linux-app
             this._setLinuxDashboard();
@@ -148,7 +151,7 @@ export class ConsoleComponent extends FeatureComponent<TreeViewInfo<SiteData>> {
   }
 
   private _setWindowsDashboard() {
-    this.windows = true;
+    this.os = 'windows';
     this.options = [
       {
         displayLabel: this._translateService.instant(PortalResources.feature_cmdConsoleName),
@@ -163,7 +166,7 @@ export class ConsoleComponent extends FeatureComponent<TreeViewInfo<SiteData>> {
   }
 
   private _setLinuxDashboard() {
-    this.windows = false;
+    this.os = 'linux';
     this.options = [
       {
         displayLabel: this._translateService.instant(PortalResources.feature_bashConsoleName),
