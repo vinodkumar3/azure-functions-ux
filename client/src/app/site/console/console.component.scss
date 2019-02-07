@@ -9,6 +9,7 @@ div.browse-container {
 }
 
 #console-container {
+  position: absolute;
   height: 100%;
   width: 100%;
 }
@@ -100,17 +101,20 @@ span.bash-cursor {
     margin-bottom: 20px;
   }
 
+  $heightAdjustment: 77;
+  $heightAdjustmentWarning: $heightAdjustment + 85;
+  $heightAdjustmentSsh: $heightAdjustmentWarning + 20;
+
   div.console-wrapper {
     position: absolute;
-    height: calc(100% - 90px);
+    height: calc(100% - #{$heightAdjustment}px);
     width: calc(100% - 50px);
-    margin-bottom: 5px;
 
     &.warning-adjustment {
-      height: calc(100% - 140px);
+      height: calc(100% - #{$heightAdjustmentWarning}px);
 
       &.ssh-adjustment {
-        height: calc(100% - 160px);
+        height: calc(100% - #{$heightAdjustmentSsh}px);
         margin-top: 20px;
       }
     }
@@ -141,16 +145,20 @@ span.bash-cursor {
 
 :host-context([console-type='blade']),
 [console-type='blade'] {
+  $heightAdjustment: 30;
+  $heightAdjustmentWarning: $heightAdjustment + 85;
+  $heightAdjustmentSsh: $heightAdjustmentWarning + 20;
+
   div.console-wrapper {
     position: absolute;
-    height: calc(100% - 35px);
+    height: calc(100% - #{$heightAdjustment}px);
     width: calc(100% - 50px);
 
     &.warning-adjustment {
-      height: calc(100% - 120px);
+      height: calc(100% - #{$heightAdjustmentWarning}px);
 
       &.ssh-adjustment {
-        height: calc(100% - 140px);
+        height: calc(100% - #{$heightAdjustmentSsh}px);
         margin-top: 20px;
       }
     }

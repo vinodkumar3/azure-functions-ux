@@ -18,13 +18,10 @@
         </span>
       </div>
     </div>
-    <div class="console-wrapper"
-      [class.warning-adjustment]="!!editModeWarning && !editModeWarning.isEmpty"
-      [class.ssh-adjustment]="!windows && !toggleConsole">
+    <div class="console-wrapper" [class.warning-adjustment]="!!editModeWarning && !editModeWarning.isEmpty" [class.ssh-adjustment]="!windows && !toggleConsole">
       <app-cmd *ngIf="windows && toggleConsole" @fade></app-cmd>
       <app-powershell *ngIf="windows && !toggleConsole" @fade></app-powershell>
       <app-bash *ngIf="!windows && toggleConsole" [appName]= "appName" @fade></app-bash>
       <app-ssh *ngIf="!windows && !toggleConsole" #ssh @fade></app-ssh>
     </div>
-  </div>
 </div>
