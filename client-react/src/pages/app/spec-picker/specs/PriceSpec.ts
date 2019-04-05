@@ -17,9 +17,10 @@ export interface SpecPickerInput<T> {
 }
 
 export interface PlanSpecPickerData {
+  returnObjectResult?: boolean;
   subscriptionId: string;
   location: string;
-  hostingEnvironmentName: string | null;
+  hostingEnvironmentName?: string;
   allowAseV2Creation: boolean;
   forbiddenSkus: string[];
   isLinux: boolean;

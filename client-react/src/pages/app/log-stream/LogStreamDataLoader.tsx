@@ -38,6 +38,7 @@ class LogStreamDataLoader extends React.Component<LogStreamDataLoaderProps, LogS
       site: {
         id: '',
         name: '',
+        location: '',
         properties: {} as Site,
       },
       logsEnabled: { applicationLogs: false, webServerLogs: false },

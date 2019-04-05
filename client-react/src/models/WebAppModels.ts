@@ -4,14 +4,23 @@ export interface ArmObj<T> {
   properties: T;
   type?: string;
   tags?: { [key: string]: string };
-  location?: string;
+  location: string;
   name: string;
+  sku?: ArmSku;
 }
 
 export interface ArmArray<T> {
   value: ArmObj<T>[];
   nextLink?: string | null;
   id?: string;
+}
+
+export interface ArmSku {
+  name: string;
+  tier: string;
+  size: string;
+  family: string;
+  capacity: string;
 }
 
 export interface Address {
@@ -686,7 +695,7 @@ export interface Site {
   premiumAppDeployed: boolean;
   scmSiteAlsoStopped: boolean;
   targetSwapSlot: string;
-  hostingEnvironmentProfile: HostingEnvironmentProfile;
+  hostingEnvironmentProfile?: HostingEnvironmentProfile;
   microService: string;
   gatewaySiteName: string;
   clientAffinityEnabled: boolean;

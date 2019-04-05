@@ -101,6 +101,7 @@ export function getStickySettings(
   return {
     id: '',
     name: '',
+    location: '',
     properties: {
       appSettingNames,
       connectionStringNames,
