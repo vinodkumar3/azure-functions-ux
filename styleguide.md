@@ -7,7 +7,7 @@ A style guide helps maintain consistency and readability throughout the codebase
 ## Table of Contents
 
   1. [Types](#types)
-  2. [References](#references)
+  2. [References](#references) 
   3. [Objects](#objects)
   4. [Arrays](#arrays)
   5. [Destructuring](#destructuring)
@@ -66,7 +66,7 @@ A style guide helps maintain consistency and readability throughout the codebase
     - `array`
     - `function`
 
-    ```typescript
+    ```typescripts
     const foo = [1, 2];
     const bar = foo;
 
