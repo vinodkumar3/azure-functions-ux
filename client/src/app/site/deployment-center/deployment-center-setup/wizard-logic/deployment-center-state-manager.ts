@@ -34,6 +34,7 @@ import { ScenarioService } from '../../../../shared/services/scenario/scenario.s
 import { AuthzService } from '../../../../shared/services/authz.service';
 import { VSOAccount } from '../../Models/vso-repo';
 import { AzureDevOpsService } from './azure-devops.service';
+import { SiteConfig } from 'app/shared/models/arm/site-config';
 
 @Injectable()
 export class DeploymentCenterStateManager implements OnDestroy {
@@ -46,6 +47,7 @@ export class DeploymentCenterStateManager implements OnDestroy {
   private _vstsApiToken: string;
   public siteArm: ArmObj<Site>;
   public siteArmObj$ = new ReplaySubject<ArmObj<Site>>();
+  public siteConfig: ArmObj<SiteConfig>;
   public updateSourceProviderConfig$ = new Subject();
   public selectedVstsRepoId = '';
   public subscriptionName = '';
@@ -71,15 +73,17 @@ export class DeploymentCenterStateManager implements OnDestroy {
         const siteDescriptor = new ArmSiteDescriptor(this._resourceId);
         return forkJoin(
           siteService.getSite(this._resourceId),
+          siteService.getSiteConfig(siteDescriptor.getSiteOnlyResourceId()),
           this._cacheService.getArm(`/subscriptions/${siteDescriptor.subscription}`, false, ARMApiVersions.armApiVersion)
         );
       })
       .switchMap(result => {
-        const [site, sub] = result;
+        const [site, siteConfig, sub] = result;
         this.siteArm = site.result;
         this.isLinuxApp = this.siteArm.kind.toLowerCase().includes(Kinds.linux);
         this.isFunctionApp = this.siteArm.kind.toLowerCase().includes(Kinds.functionApp);
         this.siteArmObj$.next(this.siteArm);
+        this.siteConfig = siteConfig.result;
         this.subscriptionName = sub.json().displayName;
         this._location = this.siteArm.location;
         return scenarioService.checkScenarioAsync(ScenarioIds.vstsDeploymentHide, { site: this.siteArm });
@@ -163,6 +167,18 @@ export class DeploymentCenterStateManager implements OnDestroy {
   }
 
   private _deployVsts() {
+    if (
+      this.siteConfig.properties.scmType
+        .toString()
+        .trim()
+        .toLowerCase() != 'none' ||
+      this.siteConfig.properties.scmType
+        .toString()
+        .trim()
+        .toLowerCase() != ''
+    ) {
+      throw 'Deployment options is already setup on your web site: {0}. Kindly naviagte to web app and disconnect before proceeding.';
+    }
     return this._startVstsDeployment().concatMap(id => {
       return Observable.timer(1000, 1000)
         .switchMap(() => this._pollVstsCheck(id))
