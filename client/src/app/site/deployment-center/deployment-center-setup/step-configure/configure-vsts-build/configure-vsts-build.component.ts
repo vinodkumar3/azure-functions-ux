@@ -5,9 +5,10 @@ import { Subject } from 'rxjs/Subject';
 import { CacheService } from '../../../../../shared/services/cache.service';
 import { DropDownElement } from '../../../../../shared/models/drop-down-element';
 import { LogService } from '../../../../../shared/services/log.service';
-import { LogCategories, DeploymentCenterConstants } from '../../../../../shared/models/constants';
+import { LogCategories, DeploymentCenterConstants, Regex } from '../../../../../shared/models/constants';
 import { TranslateService } from '@ngx-translate/core';
 import { RequiredValidator } from '../../../../../shared/validators/requiredValidator';
+import { RegexValidator } from 'app/shared/validators/regexValidator';
 import { PortalResources } from '../../../../../shared/models/portal-resources';
 import { VstsValidators } from '../../validators/vsts-validators';
 import { AzureDevOpsService } from '../../wizard-logic/azure-devops.service';
@@ -58,8 +59,13 @@ export class ConfigureVstsBuildComponent implements OnDestroy {
     const required = new RequiredValidator(this._translateService, false);
 
     if (this.wizard.wizardValues.buildSettings.createNewVsoAccount) {
+      const organizationNameValidator = RegexValidator.create(
+        Regex.organizationName,
+        this._translateService.instant(PortalResources.invalidOrganizationName)
+      );
+
       this.wizard.buildSettings.get('location').setValidators(required.validate.bind(required));
-      this.wizard.buildSettings.get('vstsAccount').setValidators([required.validate.bind(required)]);
+      this.wizard.buildSettings.get('vstsAccount').setValidators([required.validate.bind(required), organizationNameValidator]);
       this.wizard.buildSettings
         .get('vstsAccount')
         .setAsyncValidators([

@@ -127,6 +127,7 @@ export class Regex {
   public static readonly errorLog: RegExp = /^(\d{4}-\d{2}-\d{2})[T\s](\d{2}:\d{2}:\d{2}\.\d+)\ (\[Error|ERROR)/;
   public static readonly warningLog: RegExp = /^(\d{4}-\d{2}-\d{2})[T\s](\d{2}:\d{2}:\d{2}\.\d+)\ (\[Warning|WARNING)/;
   public static readonly log: RegExp = /^(\d{4}-\d{2}-\d{2})[T\s](\d{2}:\d{2}:\d{2})/;
+  public static readonly organizationName: RegExp = /^[^_.@~;{}\'+=,<>|/\\?*:&$*"#%\[\]][^@~;{}\'+=,<>|/\\?*:&$*"#%\[\]]*[^.@;{}\'+=,<>|/\\?*:&$*"#%\[\]]$/;
 }
 
 export class Links {

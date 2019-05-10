@@ -4911,4 +4911,7 @@ Set to "External URL" to use an API definition that is hosted elsewhere.</value>
   <data name="readOnlyJava" xml:space="preserve">
     <value>Editing functions in the portal is not supported for Java Function Apps. Please use Maven or VS Code for development.</value>
   </data>
+  <data name="invalidOrganizationName", xml:space="preserve">
+    <value>The given organization name is not valid. Organization names must start with a letter or number, followed by letters, numbers or hyphens, and must end with a letter or number.</value>
+  </data>
 </root>
