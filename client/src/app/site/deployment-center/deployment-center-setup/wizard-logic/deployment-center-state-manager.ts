@@ -35,6 +35,7 @@ import { AuthzService } from '../../../../shared/services/authz.service';
 import { VSOAccount } from '../../Models/vso-repo';
 import { AzureDevOpsService } from './azure-devops.service';
 import { SiteConfig } from 'app/shared/models/arm/site-config';
+import { PortalResources } from 'app/shared/models/portal-resources';
 
 @Injectable()
 export class DeploymentCenterStateManager implements OnDestroy {
@@ -167,17 +168,19 @@ export class DeploymentCenterStateManager implements OnDestroy {
   }
 
   private _deployVsts() {
+    var scmType = this.siteConfig.properties.scmType;
     if (
-      this.siteConfig.properties.scmType
+      scmType != null ||
+      scmType
         .toString()
         .trim()
-        .toLowerCase() != 'none' ||
-      this.siteConfig.properties.scmType
+        .toLowerCase() != '' ||
+      scmType
         .toString()
         .trim()
-        .toLowerCase() != ''
+        .toLowerCase() != 'none'
     ) {
-      throw 'Deployment options is already setup on your web site: {0}. Kindly naviagte to web app and disconnect before proceeding.';
+      throw PortalResources.error_deploymentCenterExists;
     }
     return this._startVstsDeployment().concatMap(id => {
       return Observable.timer(1000, 1000)
