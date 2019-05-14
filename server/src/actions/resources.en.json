@@ -1201,6 +1201,6 @@
         "java_splash_line_1": "Java Functions can be built, tested and deployed locally from your machine. No portal required!",
         "java_splash_line_2": "Click below to get started with documentation on how to build your first Azure Function with Java.",
         "java_splash_button": "Java on Azure Functions Quickstart",
-        "error_deploymentCenterExists": "Deployment center is already setup on your web site. Kindly naviagte to web app and disconnect before proceeding. Deployment slots are considered part of the web app itself."
+        "error_deploymentCenterExists": "Deployment is already configured through Deployment Center on your web app. To reconfigure, kindly disconnect the existing one before proceeding further. Note that only one deployment configuration is allowed through Azure DevOps in Deployment Center for a web app, in spite of the number of slots."
     }
 }
