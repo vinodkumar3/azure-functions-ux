@@ -349,7 +349,7 @@ export class DeploymentCenterStateManager implements OnDestroy {
       subscriptionId: siteDescriptor.subscription,
       subscriptionName: this.subscriptionName,
       tenantId: tid,
-      resourceIdentifier: siteDescriptor.getTargetAppFormattedName(),
+      resourceIdentifier: siteDescriptor.getFormattedTargetSiteName(),
       location: this._location,
       resourceGroupName: siteDescriptor.resourceGroup,
       authorizationInfo: {
