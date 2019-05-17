@@ -198,6 +198,15 @@ export class ArmSiteDescriptor extends ArmResourceDescriptor {
 
     return this._websiteId;
   }
+
+  getTargetAppFormattedName(): string {
+    if (!this._websiteId) {
+      const name = !this.slot ? this.site : `${this.site}/(${this.slot})`;
+      return name;
+    }
+
+    return this.site;
+  }
 }
 
 export class ArmPlanDescriptor extends ArmResourceDescriptor {
