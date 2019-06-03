@@ -86,7 +86,7 @@ export class WindowsFramworksComponent implements OnInit, OnDestroy {
 
   private _ngUnsubscribe$ = new Subject();
   selectedPythonVersion = '';
-  selectedFramework = WebAppFramework.AspNetWap;
+  selectedFramework = WebAppFramework.AspNetCore;
   selectedPythonFramework = this.defaultPythonFramework;
   selectedTaskRunner = this.defaultNodeTaskRunner;
   requiredValidator: RequiredValidator;
