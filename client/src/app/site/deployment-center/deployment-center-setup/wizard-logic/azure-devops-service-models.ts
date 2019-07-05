@@ -76,3 +76,9 @@ export interface DevOpsList<T> {
   count: number;
   value: T[];
 }
+
+export interface GitItem {
+  objectId: string;
+  path: string;
+  url: string;
+}

@@ -5004,6 +5004,9 @@ Set to "External URL" to use an API definition that is hosted elsewhere.</value>
   <data name="createNewPlan" xml:space="preserve">
     <value>Create a new plan</value>
   </data>
+  <data name="solutionList" xml:space="preserve">
+    <value>Select solution file</value>
+  </data>
   <data name="planName" xml:space="preserve">
     <value>Plan name</value>
   </data>

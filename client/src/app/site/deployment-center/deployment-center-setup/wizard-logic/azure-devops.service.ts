@@ -3,7 +3,7 @@ import { UserService } from 'app/shared/services/user.service';
 import { Subject } from 'rxjs/Subject';
 import { Http } from '@angular/http';
 import { Headers } from '@angular/http';
-import { AuthoricatedUserContext, DevOpsAccount, DevOpsList, DevOpsProject } from './azure-devops-service-models';
+import { AuthoricatedUserContext, DevOpsAccount, DevOpsList, DevOpsProject, GitItem } from './azure-devops-service-models';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { uniqBy } from 'lodash-es';
 import { of } from 'rxjs/observable/of';
@@ -130,6 +130,54 @@ export class AzureDevOpsService implements OnDestroy {
         headers: this._headersWithoutPassthrough,
       })
       .map(res => res.json());
+  }
+
+  searchFile(account: string, project: string, repoName: string, fileSuffix: string): Observable<string[]> {
+    return this.getGitRepoFiles(account, project, repoName, '/').switchMap((items: GitItem[]) => {
+      var pathList: string[] = items.map(item => item.path);
+      return Observable.of(
+        pathList.filter(path => {
+          path.toUpperCase().endsWith(fileSuffix.toUpperCase());
+        })
+      );
+    });
+  }
+
+  public getGitRepoFiles(
+    account: string,
+    projectName: string,
+    repoName: string,
+    scopePath: string = null,
+    recursionLevel: string = null
+  ): Observable<GitItem[]> {
+    if (!projectName) {
+      throw 'projectName was not specified.';
+    }
+
+    if (!repoName) {
+      throw 'repoName was not specified.';
+    }
+
+    return this.getAccounts().switchMap(r => {
+      const msaPassthrough = r.find(x => x.AccountName.toLowerCase() === account.toLowerCase())!.ForceMsaPassThrough;
+      var requestUrl = `https://dev.azure.com/${account}/${projectName}/_apis/git/repositories/${repoName}/items?scopePath=${scopePath}&recursionLevel=full`;
+
+      return this._httpClient
+        .get(requestUrl, {
+          headers: msaPassthrough ? this._headersWithPassthrough : this._headersWithoutPassthrough,
+        })
+        .map(res => res.json());
+    });
+
+    // if (scopePath) requestUrl = "{0}{1}/_apis/git/repositories/{2}/items?scopePath={3}&recursionLevel={4}".format(this._rootRequestPath, projectName, repoName, scopePath, recursionLevel);
+    // return this._beginRequestUrl<any>(requestUrl, {
+    //     httpMethod: "GET",
+    //     responseIsCollection: true,
+    //     httpResponseType: responseType,
+    //     queryParams: {
+    //         "api-version": "5.1-preview.1"
+    //     }
+    // });
   }
 
   private get _headersWithPassthrough(): Headers {

@@ -9,6 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { RegexValidator } from 'app/shared/validators/regexValidator';
 import { PortalResources } from 'app/shared/models/portal-resources';
 import { Regex } from 'app/shared/models/constants';
+import { AzureDevOpsService } from '../../../wizard-logic/azure-devops.service';
 
 export const TaskRunner = {
   None: 'None',
@@ -56,6 +57,10 @@ export class WindowsFramworksComponent implements OnInit, OnDestroy {
     { value: PythonFrameworkType.Flask, displayLabel: 'Flask' },
   ];
 
+  solutionList: DropDownElement<string>[];
+
+  selectedSolutionFile = WebAppFramework.AspNetCore;
+
   pythonLoading = false;
   webApplicationFrameworks: DropDownElement<string>[] = [
     {
@@ -94,14 +99,27 @@ export class WindowsFramworksComponent implements OnInit, OnDestroy {
   constructor(
     public wizard: DeploymentCenterStateManager,
     private _cacheService: CacheService,
-    private _translateService: TranslateService
+    private _translateService: TranslateService,
+    private _azureDevOpsService: AzureDevOpsService
   ) {
     this.setupValidators();
+    // this.getSolutionList()
+    //   .map((val) => {
+    //     this.solutionList = <DropDownElement<string>[]>val
+    //   })
+    //this.wizard.wizardForm.controls.buildSettings.
   }
 
   get getFramework() {
     return this.selectedPythonFramework;
   }
+
+  applicationFrameworkChanged(evt) {
+    this.getSolutionList().map(val => {
+      this.solutionList = <DropDownElement<string>[]>val;
+    });
+  }
+
   private setupValidators() {
     this.requiredValidator = new RequiredValidator(this._translateService, false);
     const workingDirectoryValidator = RegexValidator.create(
@@ -173,6 +191,24 @@ export class WindowsFramworksComponent implements OnInit, OnDestroy {
       .get('pythonSettings')
       .get('flaskProjectName')
       .updateValueAndValidity();
+  }
+
+  private getSolutionList() {
+    return this._azureDevOpsService
+      .searchFile(
+        this.wizard.wizardValues.buildSettings.vstsAccount,
+        this.wizard.wizardValues.buildSettings.vstsProject,
+        this.wizard.wizardValues.sourceSettings.repoUrl,
+        '.sln'
+      )
+      .map(value => {
+        return value.map(v => {
+          return {
+            displayLabel: v,
+            value: v,
+          };
+        });
+      });
   }
 
   ngOnInit(): void {

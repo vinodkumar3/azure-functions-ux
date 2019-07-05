@@ -13,6 +13,7 @@
           bindValue="value"
           [(ngModel)]="selectedFramework"
           formControlName="applicationFramework"
+          (change)="applicationFrameworkChanged($event)"
         >
         </ng-select>
       </div>
@@ -102,6 +103,26 @@
               [control]="wizard?.buildSettings?.controls?.pythonSettings?.controls?.flaskProjectName"
             ></textbox>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="selectedFramework === 'AspNetWap'">
+      <div class="setting-wrapper">
+        <label id="dc-vsts-build-windows-solutions-label" class="setting-label">{{ 'solutionList' | translate }} </label>
+        <div class="setting-control-container">
+          <ng-select
+          aria-labelledby="dc-vsts-build-windows-solutions-label"
+          class="custom-select"
+          [clearable]="false"
+          [searchable]="true"
+          [items]="solutionList"
+          bindLabel="displayLabel"
+          bindValue="value"
+          [(ngModel)]="selectedSolutionFile"
+          formControlName="solutionListForm"
+        >
+        </ng-select>
         </div>
       </div>
     </div>
