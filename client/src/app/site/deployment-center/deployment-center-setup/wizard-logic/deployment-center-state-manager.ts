@@ -38,6 +38,7 @@ import { ScenarioService } from '../../../../shared/services/scenario/scenario.s
 import { VSOAccount } from '../../Models/vso-repo';
 import { AzureDevOpsService } from './azure-devops.service';
 import { LocalStorageService } from '../../../../shared/services/local-storage.service';
+import { Subscription } from 'rxjs';
 
 const CreateAadAppPermissionStorageKey = 'DeploymentCenterSessionCanCreateAadApp';
 @Injectable()
@@ -69,9 +70,9 @@ export class DeploymentCenterStateManager implements OnDestroy {
     private _azureDevOpsService: AzureDevOpsService,
     private _translateService: TranslateService,
     private _localStorageService: LocalStorageService,
+    private _portalService: PortalService,
     siteService: SiteService,
     userService: UserService,
-    portalService: PortalService,
     scenarioService: ScenarioService
   ) {
     this.resourceIdStream$
@@ -105,14 +106,14 @@ export class DeploymentCenterStateManager implements OnDestroy {
         this._sessionId = r.sessionId;
       });
 
-    if (scenarioService.checkScenario(ScenarioIds.vstsSource).status !== 'disabled') {
-      portalService
-        .getAdToken('azureTfsApi')
-        .first()
-        .subscribe(tokenData => {
-          this._vstsApiToken = tokenData.result.token;
-        });
-    }
+    // if (scenarioService.checkScenario(ScenarioIds.vstsSource).status !== 'disabled') {
+    //   this._portalService
+    //     .getAdToken('azureTfsApi')
+    //     .first()
+    //     .subscribe(tokenData => {
+    //       this._vstsApiToken = tokenData.result.token;
+    //     });
+    // }
   }
 
   public get wizardValues(): WizardForm {
@@ -173,24 +174,33 @@ export class DeploymentCenterStateManager implements OnDestroy {
   }
 
   private _deployVsts() {
-    return this._canCreateAadApp().switchMap(r => {
-      if (r.status !== 'succeeded') {
-        return Observable.of(r);
-      }
+    return this._getVstsToken()
+      .switchMap(r => {
+        if (r.status !== 'succeeded') {
+          return Observable.of(r);
+        }
 
-      return this._startVstsDeployment().concatMap(id => {
-        return Observable.timer(1000, 1000)
-          .switchMap(() => this._pollVstsCheck(id))
-          .map(r => {
-            const result = r.json();
-            const ciConfig: { status: string; statusMessage: string } = result.ciConfiguration.result;
-            return { ...ciConfig, result: result.ciConfiguration };
-          })
-          .first(result => {
-            return result.status !== 'inProgress' && result.status !== 'queued';
-          });
+        this._vstsApiToken = r.result;
+        return this._canCreateAadApp();
+      })
+      .switchMap(r => {
+        if (r.status !== 'succeeded') {
+          return Observable.of(r);
+        }
+
+        return this._startVstsDeployment().concatMap(id => {
+          return Observable.timer(1000, 1000)
+            .switchMap(() => this._pollVstsCheck(id))
+            .map(r => {
+              const result = r.json();
+              const ciConfig: { status: string; statusMessage: string } = result.ciConfiguration.result;
+              return { ...ciConfig, result: result.ciConfiguration };
+            })
+            .first(result => {
+              return result.status !== 'inProgress' && result.status !== 'queued';
+            });
+        });
       });
-    });
   }
 
   private _pollVstsCheck(id: string) {
@@ -463,14 +473,42 @@ export class DeploymentCenterStateManager implements OnDestroy {
     this._localStorageService.setItem(storedPermissionItem.id, storedPermissionItem);
   }
 
-  public getVstsPassthroughHeaders(appendMsaPassthroughHeader: boolean = false): Headers {
-    const headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    headers.append('Accept', 'application/json');
-    headers.append('Vstsauthorization', `Bearer ${this._vstsApiToken}`);
-    headers.append('MsaPassthrough', `${appendMsaPassthroughHeader}`);
-    return headers;
+  private _getVstsToken(): Observable<{ status: string; statusMessage: string; result: any }> {
+    return this._portalService
+      .getAdToken('azureTfsApi')
+      .first()
+      .switchMap(tokenData => {
+        if (tokenData != null) {
+          return Observable.of({
+            status: 'succeeded',
+            statusMessage: null,
+            result: tokenData.result.token,
+          });
+        } else {
+          return Observable.of({
+            status: 'failed',
+            statusMessage: 'failed to get a valid vsts token ',
+            result: null,
+          });
+        }
+      })
+      .catch(error => {
+        return Observable.of({
+          status: 'failed',
+          statusMessage: 'failed to get token ' + JSON.stringify(error),
+          result: null,
+        });
+      });
   }
+
+  // public getVstsPassthroughHeaders(appendMsaPassthroughHeader: boolean = false): Headers {
+  //   const headers = new Headers();
+  //   headers.append('Content-Type', 'application/json');
+  //   headers.append('Accept', 'application/json');
+  //   headers.append('Vstsauthorization', `Bearer ${this._vstsApiToken}`);
+  //   headers.append('MsaPassthrough', `${appendMsaPassthroughHeader}`);
+  //   return headers;
+  // }
 
   public getVstsDirectHeaders(appendMsaPassthroughHeader: boolean = true): Headers {
     const headers = new Headers();

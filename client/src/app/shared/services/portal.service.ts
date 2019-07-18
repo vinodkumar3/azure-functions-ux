@@ -260,7 +260,7 @@ export class PortalService implements IPortalService {
         } else if (o.data.status === 'cancelled') {
           return Observable.of(null);
         } else {
-          return Observable.throw(o.data);
+          return Observable.throw('some error while fetching token');
         }
       });
   }
