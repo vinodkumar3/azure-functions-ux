@@ -38,7 +38,6 @@ import { ScenarioService } from '../../../../shared/services/scenario/scenario.s
 import { VSOAccount } from '../../Models/vso-repo';
 import { AzureDevOpsService } from './azure-devops.service';
 import { LocalStorageService } from '../../../../shared/services/local-storage.service';
-import { Subscription } from 'rxjs';
 
 const CreateAadAppPermissionStorageKey = 'DeploymentCenterSessionCanCreateAadApp';
 @Injectable()
@@ -105,15 +104,6 @@ export class DeploymentCenterStateManager implements OnDestroy {
         this._token = r.token;
         this._sessionId = r.sessionId;
       });
-
-    // if (scenarioService.checkScenario(ScenarioIds.vstsSource).status !== 'disabled') {
-    //   this._portalService
-    //     .getAdToken('azureTfsApi')
-    //     .first()
-    //     .subscribe(tokenData => {
-    //       this._vstsApiToken = tokenData.result.token;
-    //     });
-    // }
   }
 
   public get wizardValues(): WizardForm {
@@ -487,7 +477,7 @@ export class DeploymentCenterStateManager implements OnDestroy {
         } else {
           return Observable.of({
             status: 'failed',
-            statusMessage: 'failed to get a valid vsts token ',
+            statusMessage: this._translateService.instant(PortalResources.vstsTokenIsInvalid),
             result: null,
           });
         }
@@ -495,20 +485,11 @@ export class DeploymentCenterStateManager implements OnDestroy {
       .catch(error => {
         return Observable.of({
           status: 'failed',
-          statusMessage: 'failed to get token ' + JSON.stringify(error),
+          statusMessage: this._translateService.instant(PortalResources.vstsTokenFetchFailed).format(JSON.stringify(error)),
           result: null,
         });
       });
   }
-
-  // public getVstsPassthroughHeaders(appendMsaPassthroughHeader: boolean = false): Headers {
-  //   const headers = new Headers();
-  //   headers.append('Content-Type', 'application/json');
-  //   headers.append('Accept', 'application/json');
-  //   headers.append('Vstsauthorization', `Bearer ${this._vstsApiToken}`);
-  //   headers.append('MsaPassthrough', `${appendMsaPassthroughHeader}`);
-  //   return headers;
-  // }
 
   public getVstsDirectHeaders(appendMsaPassthroughHeader: boolean = true): Headers {
     const headers = new Headers();
