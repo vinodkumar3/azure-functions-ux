@@ -468,7 +468,7 @@ export class DeploymentCenterStateManager implements OnDestroy {
       .getAdToken('azureTfsApi')
       .first()
       .switchMap(tokenData => {
-        if (tokenData == null || tokenData.result == null || tokenData.result.token == null || !parseToken(tokenData.result.token)) {
+        if (!tokenData || !tokenData.result || !tokenData.result.token || !parseToken(tokenData.result.token)) {
           return Observable.of({
             status: 'failed',
             statusMessage: this._translateService.instant(PortalResources.vstsTokenIsInvalid),
